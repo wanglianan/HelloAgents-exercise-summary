@@ -32,7 +32,7 @@ You can always edit this file as your project grows.
 - 智能体智慧： 基于符号和逻辑的智能体的智慧来自于设计者自身的预先编码的知识库和逻辑推理规则，**智能的本质**，就是符号的计算与处理，
 - 基于符号主义的应用：**专家系统**就是符号主义时代最重要最成功的系统应用成果
 - 专家系统组成部分：专家系统通常由**知识库、推理机、用户界面**等几个核心部分构成
-<img width="1806" height="903" alt="image" src="https://github.com/user-attachments/assets/f37c3d3e-85ee-447e-8610-9b0a7d0b9309" />
+
 - 知识库和推理机功能：
   **知识库**（Knowledge Base）：右一系列IF-ELSE-THEN的产生式规则等形式进行知识表示的领域专家的知识和经验的存放系统，即为知识存储系统
   **推理机**：
