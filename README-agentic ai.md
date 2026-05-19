@@ -79,7 +79,7 @@
 **提升应用价值**：无论是餐厅推荐、零售分析还是个人日程管理，都能因工具而变得**更实用、更强大**。
 
 ## 3.2 创建一个工具
-**核心观点：工具即函数，模型自主决策**
+**核心观点：工具即代码/函数，向 LLM 提供工具的描述和可用性，模型会自行决定何时调用，让LLM学会调用函数的过程，核心思想是模型不直接调用，而是“请求”调用**
 
 ### 示例：获取指定时区的时间
 
@@ -105,3 +105,50 @@
 4. 反馈结果 (Feed Back Result)：将函数执行的结果作为新的上下文，送回给模型，让它继续推理或生成最终答案。
 这个流程的关键在于，开发者扮演了“翻译官”和“执行者”的角色，弥合了语言模型的“文本生成”能力与现实世界“函数执行”能力之间的鸿沟。
 
+# 3 工具使用
+## 3.3 工具调用语法 Tool Use Syntax
+
+**工具调用的本质**：
+  - LLM（大语言模型）本身不会直接调用工具。
+  - LLM 会“请求”开发者去调用某个工具，开发者负责执行该工具并将其结果返回给 LLM。
+  - 在开发社区中，人们常简化说“LLM 调用了工具”，但这在技术上并不准确，仅是一种便捷的说法。
+
+- **AI Suite 库**：
+  - 这是一个开源库，由 Andrew Ng 及其团队开发。
+  - 它提供了一种统一、简便的语法来调用多个不同的 LLM 提供商（如 OpenAI）。
+  - 该库的核心功能之一是自动处理工具描述，极大简化了开发流程。
+
+## 一、以 get_current_time 函数为例
+
+工具定义：
+
+```python
+from datetime import datetime
+def get_current_time():
+    """Returns the current time as a string"""
+    return datetime.now().strftime("%H:%M:%S")
+
+```
+
+使用 AI Suite 库调用工具的基本代码框架：
+
+```python
+import aisuite as ai
+
+client = ai.Client()
+
+response = client.chat.completions.create(
+    model="openai:gpt-4o",     # 指定使用的模型
+    messages=messages,          # 传递给 LLM 的消息数组
+    tools=[get_current_time],   # 定义 LLM 可以访问的工具列表
+    max_turns=5                 # 设置工具调用的最大轮次，防止无限循环
+)
+
+```
+
+解析：
+  - model: 选择要使用的 LLM，此处为 OpenAI 的 gpt-4o。
+  - messages: 传递给模型的对话历史或提示信息。
+  - tools: 这是最核心的部分。只需将你希望模型能访问的函数对象（如 get_current_time）放入一个列表中即可。
+  - max_turns: 设置一个上限，防止模型在工具调用上陷入无限循环。通常设为5即可，除非你的任务异常复杂。
+AI Suite 的优势： 该库的语法与 OpenAI 原生 API 非常相似，但提供了更高的抽象层，使得开发者可以专注于业务逻辑，而非繁琐的 API 细节。它还支持轻松切换多个 LLM 提供商。
