@@ -78,4 +78,30 @@
 **实现复杂逻辑**：支持**多步推理和工具链协作**，处理现实世界的复杂需求。
 **提升应用价值**：无论是餐厅推荐、零售分析还是个人日程管理，都能因工具而变得**更实用、更强大**。
 
+## 3.2 创建一个工具
+**核心观点：工具即函数，模型自主决策**
+
+### 示例：获取指定时区的时间
+
+1.  **实现工具**：编写一个带参数的函数 `get_current_time(timezone)`。
+2.  **系统提示**：
+    ```
+    You have access to a tool called get_current_time for a specific timezone. To use it, return the following exactly:
+    FUNCTION: get_current_time("timezone")
+    ```
+3.  **用户提问**：“What time is it in New Zealand?”
+4.  **LLM 输出**：LLM 会根据提示格式，输出带有具体参数的文本：
+    ```
+    FUNCTION: get_current_time("Pacific/Auckland")
+    ```
+5.  **开发者代码**：解析出函数名和参数 `"Pacific/Auckland"`，然后调用 `get_current_time("Pacific/Auckland")`。
+6.  **反馈与回复**：将执行结果（如 `"04:00:00"`）反馈给 LLM，最终 LLM 回复：“It's 4am in New Zealand.”
+
+**总结：工具使用的核心流程**
+四步循环：
+1. 提供工具 (Provide the Tool)：开发者编写好功能函数。
+2. 告知模型 (Tell the LLM)：通过系统提示词，明确告诉模型有哪些工具可用，以及如何“请求”调用它们（即输出什么格式的文本）。
+3. 解析并执行 (Parse and Execute)：开发者编写代码，监听模型的输出，识别其“请求”，并实际执行对应的函数。
+4. 反馈结果 (Feed Back Result)：将函数执行的结果作为新的上下文，送回给模型，让它继续推理或生成最终答案。
+这个流程的关键在于，开发者扮演了“翻译官”和“执行者”的角色，弥合了语言模型的“文本生成”能力与现实世界“函数执行”能力之间的鸿沟。
 
