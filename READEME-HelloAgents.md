@@ -12,7 +12,7 @@ You can use this file to introduce your project, write documentation, or share n
 
 You can always edit this file as your project grows.
 
-# 第一章初识智能体
+# 第一章-初识智能体
 ## 练习题解答
 
 - 练习题1
@@ -27,7 +27,7 @@ You can always edit this file as your project grows.
 
 - 练习题6
 
-# 第二章智能体发展史-个人思考和记录
+# 第二章-智能体发展史-个人思考和记录
 ## 符号主义
 - 智能体智慧： 基于符号和逻辑的智能体的智慧来自于设计者自身的预先编码的知识库和逻辑推理规则，**智能的本质**，就是符号的计算与处理，
 - 基于符号主义的应用：**专家系统**就是符号主义时代最重要最成功的系统应用成果
@@ -53,3 +53,10 @@ You can always edit this file as your project grows.
 ## 基于LLM为核心的智能体
 -框架图
 <img width="2067" height="873" alt="image" src="https://github.com/user-attachments/assets/7dad107c-ed69-4678-82ef-38de8ed8f1d7" />
+
+# 第四章-智能体经典范式构建
+
+当前代码实现的工具无法查询到最新的相关信息，因为LLM的训练数据集保留在2025年，工具集中也缺少2026年查询的相关工具，可以开发日期查询工具，优化prompt，让大模型可以查询到工具集中的日期查询部分工具，每次进行问题思考时，可以搜索到最新部分
+
+## 新工具代码部分
+ 
