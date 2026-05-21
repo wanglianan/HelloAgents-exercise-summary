@@ -58,5 +58,15 @@ You can always edit this file as your project grows.
 
 当前代码实现的工具无法查询到最新的相关信息，因为LLM的训练数据集保留在2025年，工具集中也缺少2026年查询的相关工具，可以开发日期查询工具，优化prompt，让大模型可以查询到工具集中的日期查询部分工具，每次进行问题思考时，可以搜索到最新部分
 
-## 新工具代码部分
+## 添加新工具-日期查询工具
+优化tools.py相关代码
  
+ ```python
+from datetime import datetime
+now = datetime.now()
+current_date = now.strftime("%Y年%m月%d日")
+
+REACT_PROMPT = f"""
+当前日期是：{current_date}。
+你是一个具备推理和行动能力的AI助手……
+```
