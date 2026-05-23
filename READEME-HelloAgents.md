@@ -70,3 +70,62 @@ REACT_PROMPT = f"""
 当前日期是：{current_date}。
 你是一个具备推理和行动能力的AI助手……
 ```
+如下部分是llm_client的核心代码部分的解释，可以作为其他程序的参考
+```python
+class HelloAgentsLLM:
+    """
+    为本书 "Hello Agents" 定制的LLM客户端。
+    它用于调用任何兼容OpenAI接口的服务，并默认使用流式响应。
+    """
+
+    def __init__(self, model: str = None, apiKey: str = None, baseUrl: str = None, timeout: int = None):
+        """
+        初始化客户端。优先使用传入参数，如果未提供，则从环境变量加载。
+        """
+        self.model = model or os.getenv("LLM_MODEL_ID")
+        apiKey = apiKey or os.getenv("LLM_API_KEY")
+        baseUrl = baseUrl or os.getenv("LLM_BASE_URL")
+        timeout = timeout or int(os.getenv("LLM_TIMEOUT", 60))
+
+        if not all([self.model, apiKey, baseUrl]):
+            raise ValueError("模型ID、API密钥和服务地址必须被提供或在.env文件中定义。")
+
+        self.client = OpenAI(api_key=apiKey, base_url=baseUrl, timeout=timeout)
+
+    def think(self, messages: List[Dict[str, str]], temperature: float = 0) -> str:
+        """
+        调用大语言模型进行思考，并返回其响应。
+        """
+        print(f"🧠 正在调用 {self.model} 模型...")
+        try:
+            # 调用大模型对话接口，获取流式响应对象
+            response = self.client.chat.completions.create(
+                model=self.model,  # 指定本次调用的大模型名称
+                messages=messages,  # 传入历史对话与用户提问消息列表
+                temperature=temperature,  # 设置生成文本随机度，数值越高创意性越强
+                stream=True,  # 开启流式逐段返回响应模式
+            )
+
+            # 处理流式响应
+            print("✅ 大语言模型响应成功:")
+            collected_content = []  # 定义列表，存储分段返回的文本内容
+            # 遍历流式迭代器，逐段接收模型返回数据
+            for chunk in response:
+                # 当前分片无有效回答内容则跳过处理
+                if not chunk.choices:
+                    continue
+                # 提取当前分片文本，为空时赋值空字符串避免报错
+                content = chunk.choices[0].delta.content or ""
+                # 无换行实时打印文本，强制刷新输出缓冲区
+                print(content, end="", flush=True)
+                # 将分段文本存入列表，用于后续拼接完整内容
+                collected_content.append(content)
+            print()  # 在流式输出结束后换行
+            # 拼接所有分段内容，返回完整回答文本
+            return "".join(collected_content)
+
+        except Exception as e:
+            print(f"❌ 调用LLM API时发生错误: {e}")
+            return None
+```
+
